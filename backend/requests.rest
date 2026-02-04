@@ -1,0 +1,515 @@
+### VeeToo API Testing - REST Client
+### Base URL
+@baseUrl = http://localhost:3000/api
+@token = 
+
+### ============================================
+### HEALTH CHECK
+### ============================================
+
+### Health Check
+GET http://localhost:3000/health
+
+### ============================================
+### AUTHENTICATION
+### ============================================
+
+### 1. Signup - CEO
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "CEO Admin",
+  "email": "ceo@veetoo.com",
+  "password": "admin123",
+  "role": "ceo",
+  "phone_number": "+1234567890",
+  "region": "Headquarters"
+}
+
+### 2. Signup - Supervisor
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "John Supervisor",
+  "email": "supervisor@veetoo.com",
+  "password": "super123",
+  "role": "supervisor",
+  "phone_number": "+1234567891",
+  "region": "North Region"
+}
+
+### 3. Signup - Salesperson
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "Jane Salesperson",
+  "email": "sales@veetoo.com",
+  "password": "sales123",
+  "role": "salesperson",
+  "phone_number": "+1234567892",
+  "region": "North Region"
+}
+
+### 4. Login - CEO
+# @name loginCEO
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "ceo@veetoo.com",
+  "password": "admin123"
+}
+
+### 5. Login - Supervisor
+# @name loginSupervisor
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "supervisor@veetoo.com",
+  "password": "super123"
+}
+
+### 6. Login - Salesperson
+# @name loginSalesperson
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "sales@veetoo.com",
+  "password": "sales123"
+}
+
+### 7. Get Current User
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{token}}
+
+### ============================================
+### STORES
+### ============================================
+
+### 8. Create Store - Main Warehouse
+POST {{baseUrl}}/stores
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Main Warehouse",
+  "location": "123 Main St, City Center",
+  "phone_number": "+1234567800"
+}
+
+### 9. Create Store - North Branch
+POST {{baseUrl}}/stores
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "North Branch",
+  "location": "456 North Ave, Uptown",
+  "phone_number": "+1234567801"
+}
+
+### 10. Create Store - South Branch
+POST {{baseUrl}}/stores
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "South Branch",
+  "location": "789 South Blvd, Downtown",
+  "phone_number": "+1234567802"
+}
+
+### 11. Get All Stores
+GET {{baseUrl}}/stores
+Authorization: Bearer {{token}}
+
+### 12. Get Store by ID
+GET {{baseUrl}}/stores/STORE_ID_HERE
+Authorization: Bearer {{token}}
+
+### 13. Update Store
+PUT {{baseUrl}}/stores/STORE_ID_HERE
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Main Warehouse - Updated",
+  "location": "123 Main St, City Center - New Building"
+}
+
+### ============================================
+### PRODUCTS
+### ============================================
+
+### 14. Create Product - Laptop
+POST {{baseUrl}}/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Dell Laptop XPS 15",
+  "sku": "LAPTOP-001",
+  "category": "Electronics",
+  "unit_price": 1299.99,
+  "description": "High-performance laptop for business"
+}
+
+### 15. Create Product - Mouse
+POST {{baseUrl}}/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Logitech Wireless Mouse",
+  "sku": "MOUSE-001",
+  "category": "Electronics",
+  "unit_price": 29.99,
+  "description": "Ergonomic wireless mouse"
+}
+
+### 16. Create Product - Office Chair
+POST {{baseUrl}}/products
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Ergonomic Office Chair",
+  "sku": "CHAIR-001",
+  "category": "Furniture",
+  "unit_price": 249.99,
+  "description": "Comfortable office chair with lumbar support"
+}
+
+### 17. Get All Products
+GET {{baseUrl}}/products
+Authorization: Bearer {{token}}
+
+### 18. Get Product by ID
+GET {{baseUrl}}/products/PRODUCT_ID_HERE
+Authorization: Bearer {{token}}
+
+### 19. Update Product
+PUT {{baseUrl}}/products/PRODUCT_ID_HERE
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "unit_price": 1199.99,
+  "description": "High-performance laptop for business - Sale Price"
+}
+
+### ============================================
+### INVENTORY
+### ============================================
+
+### 20. Adjust Inventory - Stock In (Main Warehouse)
+POST {{baseUrl}}/inventory/adjust
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "store_id": "STORE_ID_HERE",
+  "product_id": "PRODUCT_ID_HERE",
+  "quantity": 50,
+  "type": "in",
+  "notes": "Initial stock for Main Warehouse"
+}
+
+### 21. Adjust Inventory - Stock In (North Branch)
+POST {{baseUrl}}/inventory/adjust
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "store_id": "STORE_ID_HERE",
+  "product_id": "PRODUCT_ID_HERE",
+  "quantity": 30,
+  "type": "in",
+  "notes": "Initial stock for North Branch"
+}
+
+### 22. Adjust Inventory - Stock Out
+POST {{baseUrl}}/inventory/adjust
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "store_id": "STORE_ID_HERE",
+  "product_id": "PRODUCT_ID_HERE",
+  "quantity": 5,
+  "type": "out",
+  "sales_person_id": "SALESPERSON_ID_HERE",
+  "notes": "Sold to customer"
+}
+
+### 23. Get All Inventory
+GET {{baseUrl}}/inventory
+Authorization: Bearer {{token}}
+
+### 24. Get Inventory by Store
+GET {{baseUrl}}/inventory/store/STORE_ID_HERE
+Authorization: Bearer {{token}}
+
+### 25. Get Inventory by Product
+GET {{baseUrl}}/inventory/product/PRODUCT_ID_HERE
+Authorization: Bearer {{token}}
+
+### 26. Get Low Stock Items
+GET {{baseUrl}}/inventory/low-stock
+Authorization: Bearer {{token}}
+
+### 27. Get Inventory with Filters
+GET {{baseUrl}}/inventory?store_id=STORE_ID_HERE&low_stock=true
+Authorization: Bearer {{token}}
+
+### ============================================
+### INVENTORY TRANSFERS
+### ============================================
+
+### 28. Create Transfer Request
+POST {{baseUrl}}/transfers
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "from_store_id": "STORE_ID_HERE",
+  "to_store_id": "STORE_ID_HERE",
+  "product_id": "PRODUCT_ID_HERE",
+  "quantity": 10,
+  "notes": "Transferring stock to meet demand"
+}
+
+### 29. Get All Transfers
+GET {{baseUrl}}/transfers
+Authorization: Bearer {{token}}
+
+### 30. Get Transfer by ID
+GET {{baseUrl}}/transfers/TRANSFER_ID_HERE
+Authorization: Bearer {{token}}
+
+### 31. Get Transfers with Filters
+GET {{baseUrl}}/transfers?status=pending
+Authorization: Bearer {{token}}
+
+### 32. Approve Transfer
+PUT {{baseUrl}}/transfers/TRANSFER_ID_HERE/approve
+Authorization: Bearer {{token}}
+
+### 33. Complete Transfer
+PUT {{baseUrl}}/transfers/TRANSFER_ID_HERE/complete
+Authorization: Bearer {{token}}
+
+### 34. Cancel Transfer
+PUT {{baseUrl}}/transfers/TRANSFER_ID_HERE/cancel
+Authorization: Bearer {{token}}
+
+### ============================================
+### INVOICES
+### ============================================
+
+### 35. Create Invoice (as Salesperson)
+POST {{baseUrl}}/invoices
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "amount": 1500.00,
+  "qr_code": "QR123456",
+  "image_url": "https://example.com/invoice1.jpg"
+}
+
+### 36. Create Invoice (as Supervisor for Salesperson)
+POST {{baseUrl}}/invoices
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sales_person_id": "SALESPERSON_ID_HERE",
+  "amount": 2500.00,
+  "qr_code": "QR789012",
+  "image_url": "https://example.com/invoice2.jpg"
+}
+
+### 37. Get All Invoices
+GET {{baseUrl}}/invoices
+Authorization: Bearer {{token}}
+
+### 38. Get Invoices with Filters
+GET {{baseUrl}}/invoices?status=pending
+Authorization: Bearer {{token}}
+
+### 39. Get Invoices Needing Reconciliation
+GET {{baseUrl}}/invoices/reconciliation
+Authorization: Bearer {{token}}
+
+### 40. Get Invoice by ID
+GET {{baseUrl}}/invoices/INVOICE_ID_HERE
+Authorization: Bearer {{token}}
+
+### 41. Approve Invoice
+PUT {{baseUrl}}/invoices/INVOICE_ID_HERE/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "approved"
+}
+
+### 42. Reject Invoice
+PUT {{baseUrl}}/invoices/INVOICE_ID_HERE/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "status": "rejected",
+  "rejection_reason": "Invalid documentation"
+}
+
+### 43. Record Payment Against Invoice
+POST {{baseUrl}}/invoices/INVOICE_ID_HERE/payments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "payment_amount": 500.00,
+  "payment_method": "cash",
+  "reference_number": "PAY-001",
+  "notes": "Partial payment received"
+}
+
+### 44. Record Full Payment
+POST {{baseUrl}}/invoices/INVOICE_ID_HERE/payments
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "payment_amount": 1000.00,
+  "payment_method": "bank_transfer",
+  "reference_number": "PAY-002",
+  "payment_date": "2024-02-04T10:00:00Z",
+  "notes": "Final payment - bank transfer"
+}
+
+### 45. Reconcile Invoice
+PUT {{baseUrl}}/invoices/INVOICE_ID_HERE/reconcile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "reconciliation_notes": "All payments verified and matched"
+}
+
+### 46. Delete Invoice (CEO only)
+DELETE {{baseUrl}}/invoices/INVOICE_ID_HERE
+Authorization: Bearer {{token}}
+
+### ============================================
+### DEBTS
+### ============================================
+
+### 47. Create Debt
+POST {{baseUrl}}/debts
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "sales_person_id": "SALESPERSON_ID_HERE",
+  "amount": 5000.00,
+  "due_date": "2024-03-01",
+  "invoice_id": "INVOICE_ID_HERE",
+  "notes": "Outstanding balance from unpaid invoices"
+}
+
+### 48. Get All Debts
+GET {{baseUrl}}/debts
+Authorization: Bearer {{token}}
+
+### 49. Get Debts by Salesperson
+GET {{baseUrl}}/debts/salesperson/SALESPERSON_ID_HERE
+Authorization: Bearer {{token}}
+
+### 50. Get Overdue Debts
+GET {{baseUrl}}/debts/overdue
+Authorization: Bearer {{token}}
+
+### 51. Create Payment Plan for Debt
+POST {{baseUrl}}/debts/DEBT_ID_HERE/payment-plan
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "installment_amount": 500.00,
+  "frequency": "weekly",
+  "start_date": "2024-02-10",
+  "end_date": "2024-04-10"
+}
+
+### 52. Get Payment Plan for Debt
+GET {{baseUrl}}/debts/DEBT_ID_HERE/payment-plan
+Authorization: Bearer {{token}}
+
+### 53. Record Debt Payment
+POST {{baseUrl}}/debts/DEBT_ID_HERE/payment
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "amount": 500.00
+}
+
+### ============================================
+### REPORTS
+### ============================================
+
+### 54. Get CEO Dashboard
+GET {{baseUrl}}/reports/dashboard/ceo
+Authorization: Bearer {{token}}
+
+### 55. Get Reconciliation Report
+GET {{baseUrl}}/reports/reconciliation
+Authorization: Bearer {{token}}
+
+### 56. Get Reconciliation Report with Date Range
+GET {{baseUrl}}/reports/reconciliation?start_date=2024-01-01&end_date=2024-12-31
+Authorization: Bearer {{token}}
+
+### 57. Get Inventory Report
+GET {{baseUrl}}/reports/inventory
+Authorization: Bearer {{token}}
+
+### 58. Get Transfer History Report
+GET {{baseUrl}}/reports/inventory/transfers
+Authorization: Bearer {{token}}
+
+### 59. Get Transfer History with Filters
+GET {{baseUrl}}/reports/inventory/transfers?status=completed&start_date=2024-01-01&end_date=2024-12-31
+Authorization: Bearer {{token}}
+
+### 60. Get Debt Summary Report
+GET {{baseUrl}}/reports/debts
+Authorization: Bearer {{token}}
+
+### ============================================
+### TESTING WORKFLOW EXAMPLE
+### ============================================
+
+### WORKFLOW 1: Complete Invoice Reconciliation Flow
+### Step 1: Salesperson creates invoice
+### Step 2: Supervisor approves invoice
+### Step 3: Supervisor records payments
+### Step 4: Supervisor reconciles invoice
+
+### WORKFLOW 2: Complete Inventory Transfer Flow
+### Step 1: Create transfer request
+### Step 2: Approve transfer
+### Step 3: Complete transfer (updates inventory automatically)
+
+### WORKFLOW 3: Complete Debt Management Flow
+### Step 1: Create debt
+### Step 2: Create payment plan
+### Step 3: Record payments against installments

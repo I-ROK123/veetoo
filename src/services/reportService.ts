@@ -1,52 +1,40 @@
-import  api  from './api';
-import { ReportType } from '../types/report';
+import api from './apiService';
 
 export const reportService = {
-  generateReport: async (
-    reportType: ReportType,
-    filters: {
-      startDate: string;
-      endDate: string;
-      salesPersonId?: string;
-      productId?: string;
-      region?: string;
-    }
-  ) => {
-    const response = await api.get(`/reports/${reportType}`, {
-      params: filters,
-      responseType: 'blob',
-    });
-    
-    // Create blob link to download
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    
-    // Get filename from header or create one
-    const contentDisposition = response.headers['content-disposition'];
-    let filename = 'report.xlsx';
-    
-    if (contentDisposition) {
-      const filenameMatch = contentDisposition.match(/filename="(.+)"/); 
-      if (filenameMatch.length === 2) {
-        filename = filenameMatch[1];
-      }
-    }
-    
-    link.setAttribute('download', filename);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    
-    return true;
+  // Get CEO dashboard metrics
+  getCEODashboard: async () => {
+    const response = await api.get('/reports/dashboard/ceo');
+    return response.data;
   },
-  
-  getDashboardStats: async (userRole: 'salesperson' | 'supervisor' | 'ceo', userId?: string) => {
-    const url = userId 
-      ? `/reports/${userRole}/dashboard?userId=${userId}`
-      : `/reports/${userRole}/dashboard`;
-      
-    const response = await api.get(url);
+
+  // Get reconciliation report
+  getReconciliationReport: async (params?: {
+    start_date?: string;
+    end_date?: string;
+  }) => {
+    const response = await api.get('/reports/reconciliation', { params });
+    return response.data.reconciliationData;
+  },
+
+  // Get inventory report
+  getInventoryReport: async () => {
+    const response = await api.get('/reports/inventory');
+    return response.data.inventoryByStore;
+  },
+
+  // Get transfer history report
+  getTransferHistory: async (params?: {
+    start_date?: string;
+    end_date?: string;
+    status?: 'pending' | 'in_transit' | 'completed' | 'cancelled';
+  }) => {
+    const response = await api.get('/reports/inventory/transfers', { params });
+    return response.data;
+  },
+
+  // Get debt summary report
+  getDebtSummary: async () => {
+    const response = await api.get('/reports/debts');
     return response.data;
   }
 };

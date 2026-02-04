@@ -1,79 +1,71 @@
-import api from './api';
-import { Invoice, InvoiceStatus } from '../types/invoice';
+import api from './apiService';
 
 export const invoiceService = {
-  uploadInvoice: async (invoiceData: FormData) => {
-    try {
-      const response = await api.post('/invoice/upload', invoiceData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+  // Get all invoices
+  getInvoices: async (params?: {
+    status?: 'pending' | 'approved' | 'cleared' | 'rejected';
+    sales_person_id?: string;
+    reconciled?: boolean;
+  }) => {
+    const response = await api.get('/invoices', { params });
+    return response.data.invoices;
   },
-  
-  getInvoicesBySalesperson: async (salesPersonId: string, status?: InvoiceStatus) => {
-    try {
-      const url = status 
-        ? `/salesperson/${salesPersonId}/invoices?status=${status}`
-        : `/salesperson/${salesPersonId}/invoices`;
-      
-      const response = await api.get(url);
-      return response.data as Invoice[];
-    } catch (error) {
-      throw error;
-    }
+
+  // Get invoices needing reconciliation
+  getReconciliationInvoices: async () => {
+    const response = await api.get('/invoices/reconciliation');
+    return response.data.invoices;
   },
-  
-  getInvoiceById: async (invoiceId: string) => {
-    try {
-      const response = await api.get(`/invoice/${invoiceId}`);
-      return response.data as Invoice;
-    } catch (error) {
-      throw error;
-    }
+
+  // Get invoice by ID
+  getInvoice: async (id: string) => {
+    const response = await api.get(`/invoices/${id}`);
+    return response.data.invoice;
   },
-  
-  approveInvoice: async (invoiceId: string) => {
-    try {
-      const response = await api.put(`/invoice/${invoiceId}/approve`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+
+  // Create invoice
+  createInvoice: async (data: {
+    amount: number;
+    sales_person_id?: string;
+    qr_code?: string;
+    image_url?: string;
+  }) => {
+    const response = await api.post('/invoices', data);
+    return response.data;
   },
-  
-  submitPayment: async (invoiceId: string, paymentData: FormData) => {
-    try {
-      const response = await api.post(`/invoice/${invoiceId}/payment`, paymentData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+
+  // Update invoice status (approve/reject)
+  updateInvoiceStatus: async (id: string, data: {
+    status: 'approved' | 'rejected';
+    rejection_reason?: string;
+  }) => {
+    const response = await api.put(`/invoices/${id}/status`, data);
+    return response.data;
   },
-  
-  approvePayment: async (invoiceId: string, paymentId: string) => {
-    try {
-      const response = await api.put(`/invoice/${invoiceId}/payment/${paymentId}/approve`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+
+  // Record payment against invoice
+  recordPayment: async (id: string, data: {
+    payment_amount: number;
+    payment_method: 'cash' | 'bank_transfer' | 'cheque' | 'mobile_money';
+    reference_number?: string;
+    payment_date?: string;
+    notes?: string;
+  }) => {
+    const response = await api.post(`/invoices/${id}/payments`, data);
+    return response.data;
   },
-  
-  rejectPayment: async (invoiceId: string, paymentId: string, reason: string) => {
-    try {
-      const response = await api.put(`/invoice/${invoiceId}/payment/${paymentId}/reject`, { reason });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
+
+  // Reconcile invoice
+  reconcileInvoice: async (id: string, data?: {
+    reconciliation_notes?: string;
+  }) => {
+    const response = await api.put(`/invoices/${id}/reconcile`, data);
+    return response.data;
+  },
+
+  // Delete invoice
+  deleteInvoice: async (id: string) => {
+    const response = await api.delete(`/invoices/${id}`);
+    return response.data;
   }
 };

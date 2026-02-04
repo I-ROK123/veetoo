@@ -1,72 +1,38 @@
-import api from './api';
-import { Product, StockTransaction } from '../types/store';
+import api from './apiService';
 
 export const storeService = {
-  getAllProducts: async () => {
-    try {
-      const response = await api.get('/store/products');
-      return response.data as Product[];
-    } catch (error) {
-      throw error;
-    }
+  // Get all stores
+  getStores: async () => {
+    const response = await api.get('/stores');
+    return response.data.stores;
   },
-  
-  getProductById: async (productId: string) => {
-    try {
-      const response = await api.get(`/store/products/${productId}`);
-      return response.data as Product;
-    } catch (error) {
-      throw error;
-    }
+
+  // Get store by ID
+  getStore: async (id: string) => {
+    const response = await api.get(`/stores/${id}`);
+    return response.data.store;
   },
-  
-  createProduct: async (productData: Omit<Product, 'id'>) => {
-    try {
-      const response = await api.post('/store/products', productData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  
-  updateProduct: async (productId: string, productData: Partial<Product>) => {
-    try {
-      const response = await api.put(`/store/products/${productId}`, productData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  
-  deleteProduct: async (productId: string) => {
-    try {
-      const response = await api.delete(`/store/products/${productId}`);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  
-  recordStockTransaction: async (transactionData: Omit<StockTransaction, 'id' | 'date'>) => {
-    try {
-      const response = await api.post('/store/transactions', transactionData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  
-  getStockTransactions: async (filters?: { 
-    productId?: string;
-    salesPersonId?: string;
-    startDate?: string;
-    endDate?: string;
+
+  // Create store
+  createStore: async (storeData: {
+    name: string;
+    location: string;
+    manager_id?: string;
+    phone_number?: string;
   }) => {
-    try {
-      const response = await api.get('/store/transactions', { params: filters });
-      return response.data as StockTransaction[];
-    } catch (error) {
-      throw error;
-    }
+    const response = await api.post('/stores', storeData);
+    return response.data;
+  },
+
+  // Update store
+  updateStore: async (id: string, storeData: any) => {
+    const response = await api.put(`/stores/${id}`, storeData);
+    return response.data;
+  },
+
+  // Deactivate store
+  deleteStore: async (id: string) => {
+    const response = await api.delete(`/stores/${id}`);
+    return response.data;
   }
 };

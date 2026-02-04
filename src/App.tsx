@@ -7,6 +7,9 @@ import LoginPage from './pages/auth/LoginPage';
 import SalespersonDashboard from './pages/dashboard/SalespersonDashboard';
 import SupervisorDashboard from './pages/dashboard/SupervisorDashboard';
 import CEODashboard from './pages/dashboard/CEODashboard';
+import StoreManagementPage from './pages/stores/StoreManagementPage';
+import MultiStoreInventoryPage from './pages/inventory/MultiStoreInventoryPage';
+import ReconciliationPage from './pages/reconciliation/ReconciliationPage';
 
 // Components
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -18,12 +21,12 @@ import { useThemeStore } from './hooks/useThemeStore';
 const App: React.FC = () => {
   const { isAuthenticated, userRole } = useAuthStore();
   const { theme, initTheme } = useThemeStore();
-  
+
   useEffect(() => {
     // Initialize theme from localStorage
     initTheme();
   }, [initTheme]);
-  
+
   useEffect(() => {
     // Apply theme class to document element
     if (theme === 'dark') {
@@ -34,17 +37,17 @@ const App: React.FC = () => {
   }, [theme]);
 
   return (
-      <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 3000,
-            style: {
-              background: theme === 'dark' ? '#1E293B' : '#FFFFFF',
-              color: theme === 'dark' ? '#FFFFFF' : '#0F172A',
-            },
-          }}
-        />
+    <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: theme === 'dark' ? '#1E293B' : '#FFFFFF',
+            color: theme === 'dark' ? '#FFFFFF' : '#0F172A',
+          },
+        }}
+      />
       <Routes>
         <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to="/dashboard" />} />
 
@@ -55,6 +58,36 @@ const App: React.FC = () => {
               {userRole === 'salesperson' && <SalespersonDashboard />}
               {userRole === 'supervisor' && <SupervisorDashboard />}
               {userRole === 'ceo' && <CEODashboard />}
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Store Management - CEO/Supervisor only */}
+        <Route
+          path="/stores"
+          element={
+            <ProtectedRoute allowedRoles={['ceo', 'supervisor']}>
+              <StoreManagementPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Multi-Store Inventory - All roles */}
+        <Route
+          path="/inventory"
+          element={
+            <ProtectedRoute>
+              <MultiStoreInventoryPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Invoice Reconciliation - CEO/Supervisor only */}
+        <Route
+          path="/reconciliation"
+          element={
+            <ProtectedRoute allowedRoles={['ceo', 'supervisor']}>
+              <ReconciliationPage />
             </ProtectedRoute>
           }
         />
