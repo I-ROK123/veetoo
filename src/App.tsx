@@ -10,6 +10,12 @@ import CEODashboard from './pages/dashboard/CEODashboard';
 import StoreManagementPage from './pages/stores/StoreManagementPage';
 import MultiStoreInventoryPage from './pages/inventory/MultiStoreInventoryPage';
 import ReconciliationPage from './pages/reconciliation/ReconciliationPage';
+import InvoicesPage from './pages/invoices/InvoicesPage';
+import TeamPage from './pages/team/TeamPage';
+import BankingPage from './pages/banking/BankingPage';
+import DebtPage from './pages/debt/DebtPage';
+import ReportsPage from './pages/reports/ReportsPage';
+import SettingsPage from './pages/settings/SettingsPage';
 
 // Components
 import ProtectedRoute from './components/auth/ProtectedRoute';
@@ -81,6 +87,64 @@ const App: React.FC = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* New Pages - Role access to be refined later */}
+        <Route
+          path="/invoices"
+          element={
+            <ProtectedRoute>
+              <InvoicesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/team"
+          element={
+            <ProtectedRoute allowedRoles={['ceo', 'supervisor']}>
+              <TeamPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/banking"
+          element={
+            <ProtectedRoute allowedRoles={['ceo', 'supervisor']}>
+              <BankingPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/debt"
+          element={
+            <ProtectedRoute>
+              <DebtPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute allowedRoles={['ceo', 'supervisor']}>
+              <ReportsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/settings"
+          element={
+            <ProtectedRoute>
+              <SettingsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Alias for store/stores mismatch */}
+        <Route path="/store" element={<Navigate to="/stores" />} />
 
         {/* Invoice Reconciliation - CEO/Supervisor only */}
         <Route
